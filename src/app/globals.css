@@ -1,26 +1,711 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Lato:wght@300;400;700&display=swap');
 
+/* Local Font Faces */
+@font-face {
+  font-family: 'Canela';
+  src: url('/fonts/Canela.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Design System Variables - Dark Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark Theme - Primary Colors */
+  --background: #000000;           /* Updated background */
+  --surface: #3a3a3c;              /* Updated card background */
+  --surface-hover: #1A2631;
+  --surface-pressed: #0F1B24;
+  --border: #000000;               /* Updated border color */
+  --border-hover: #d4c8b5;         /* Lighter version for hover */
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;         /* Champagne Ivory */
+  --text-secondary: #aeaeae;       /* Champagne Gold */
+  --text-tertiary: #8B9AAD;
+  --text-inverse: #FFFFFF;
+  
+  /* Brand Colors */
+  --primary: #FFFFFF;              /* Champagne Gold */
+  --primary-hover: #FFFFFF;
+  --primary-pressed: #FFFFFF;
+  --primary-light: #F5EFE1;
+  
+  /* Accent Colors */
+  --accent: #2A445E;               /* Muted Steel Blue */
+  --accent-hover: #345571;
+  --accent-light: #3D5F7A;
+  
+  /* Semantic Colors */
+  --success: #22C55E;
+  --success-light: #16A34A;
+  --error: #EF4444;
+  --error-light: #DC2626;
+  --warning: #F59E0B;
+  --warning-light: #D97706;
+  
+  /* Action Colors for Swipe */
+  --like: #22c55e;
+  --like-light: #dcfce7;
+  --dislike: #ef4444;
+  --dislike-light: #fee2e2;
+  --super-like: #8b5cf6;
+  --super-like-light: #ede9fe;
+  
+  /* Shadows for Dark Theme */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+  
+  /* Concept Card Shadows */
+  --card-shadow: 8px 8px 26px rgba(0, 0, 0, 1);
+  --card-shadow-hover: 12px 12px 48px rgba(0, 0, 0, 0.5);
+  
+  /* Spacing Scale */
+  --space-xs: 0.2rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  
+  /* Typography - Updated Font Stack */
+  --font-title: 'Canela', serif;                              /* Titles */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif; /* Body text */
+  --font-caption: 'Lato', system-ui, -apple-system, sans-serif; /* Captions */
+  --font-ui: 'Avenir', 'Avenir Next', system-ui, -apple-system, sans-serif; /* Buttons/UI */
+  
+  /* Legacy font variables for compatibility */
+  --font-sans: var(--font-body);
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-retro: 'Orbitron', monospace;
+  
+  /* Animations */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light Theme Variables */
+[data-theme="light"] {
+  /* Light Theme - Primary Colors */
+  --background: #f5f5f7;     
+  --surface: #FFFFFF;              /* Off white card background */
+  --surface-hover: #F0EDE8;
+  --surface-pressed: #E8E5E0;
+  --border: #3a3a3c;               /* Keep same border color */
+  --border-hover: #a69485;         /* Darker version for hover */
+  
+  /* Text Colors */
+  --text-primary: #000000;         /* Dark text on light background */
+  --text-secondary: #000000;       /* Darker gold for secondary text */
+  --text-tertiary: #5A6B7D;
+  --text-inverse: #FFFFFF;
+  
+  /* Brand Colors */
+  --primary: #C2A669;              /* Slightly darker champagne gold */
+  --primary-hover: #B0955A;
+  --primary-pressed: #9E844B;
+  --primary-light: #F5EFE1;
+  
+  /* Accent Colors */
+  --accent: #2A445E;               /* Keep accent color */
+  --accent-hover: #1F3448;
+  --accent-light: #3D5F7A;
+  
+  /* Semantic Colors */
+  --success: #16A34A;
+  --success-light: #22C55E;
+  --error: #DC2626;
+  --error-light: #EF4444;
+  --warning: #D97706;
+  --warning-light: #F59E0B;
+  
+  /* Action Colors for Swipe */
+  --like: #16a34a;
+  --like-light: #bbf7d0;
+  --dislike: #dc2626;
+  --dislike-light: #fecaca;
+  --super-like: #7c3aed;
+  --super-like-light: #ddd6fe;
+  
+  /* Shadows for Light Theme */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+  
+  /* Concept Card Shadows */
+  --card-shadow: 8px 8px 32px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.25);
+
+    
+  /* Animations */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Tailwind Custom Properties */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --tw-color-background: var(--background);
+    --tw-color-surface: var(--surface);
+    --tw-color-primary: var(--primary);
+    --tw-color-text-primary: var(--text-primary);
+    --tw-color-text-secondary: var(--text-secondary);
+    --tw-color-text-tertiary: var(--text-tertiary);
+    --tw-color-border: var(--border);
+    --tw-color-border-hover: var(--border-hover);
   }
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  /* Add smooth transitions for theme changes */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Add transition for the root element */
+  transition: background-color 0.3s ease;
+}
+
+/* Smooth theme transitions for the document root */
+:root {
+  transition: color-scheme 0.3s ease;
+}
+
+/* Ensure all elements with background/border variables transition smoothly */
+[class*="concept-"], 
+[class*="card-"], 
+[class*="btn"], 
+.loading-spinner,
+.nav-tab,
+.nav-tabs {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-body); /* Updated to use Inter for body text */
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Add transition for body background */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography Classes */
+.font-title {
+  font-family: var(--font-title);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-caption {
+  font-family: var(--font-caption);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+/* Concept Card Styles */
+.concept-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-normal), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Apply original size at sm breakpoint and above */
+@media (min-width: 640px) {
+  .concept-card {
+    width: 420px;
+    height: 420px;
+  }
+}
+ 
+.concept-card-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.concept-card-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.concept-card-author {
+  flex: 1;
+  min-width: 0;
+}
+
+.concept-card-author-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+  font-family: var(--font-body); /* Inter for body text */
+}
+
+.concept-card-author-handle {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  margin: 0;
+  line-height: 1.2;
+  font-family: var(--font-caption); /* Lato for captions */
+}
+
+.concept-card-content {
+  padding: 0 var(--space-lg) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.concept-card-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0 0 auto 0;
+  word-wrap: break-word;
+  flex: 1;
+  font-family: var(--font-body); /* Inter for body text */
+}
+
+.concept-card-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.concept-card-stats {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.concept-card-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-caption); /* Lato for captions */
+}
+
+.concept-card-buttons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Mini Concept Card Styles - For Those Grid */
+.mini-concept-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-normal), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  width: 200px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-concept-card-header {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 12px 8px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mini-concept-card-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mini-concept-card-author-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+  line-height: 1.2;
+  font-family: var(--font-body);
+}
+
+.mini-concept-card-author-handle {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  margin: 0;
+  line-height: 1.1;
+  font-family: var(--font-caption);
+}
+
+.mini-concept-card-content {
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mini-concept-card-text {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+/* Action Buttons */
+.action-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  font-size: 1rem;
+  font-family: var(--font-ui); /* Avenir for UI elements */
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+  border-color: var(--border-hover);
+}
+
+.action-btn.like {
+  color: var(--success);
+}
+
+.action-btn.like:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--success);
+}
+
+.action-btn.dislike {
+  color: var(--error);
+}
+
+.action-btn.dislike:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--error);
+}
+
+/* Header Styles */
+.app-header {
+  background: rgba(19, 31, 40, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.app-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-title); /* Canela for titles */
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-family: var(--font-caption); /* Lato for captions */
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  background: rgba(19, 31, 40, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 0.25rem;
+  display: flex;
+  backdrop-filter: blur(10px);
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui); /* Avenir for UI elements */
+}
+
+.nav-tab.active {
+  background: var(--primary);
+  color: var(--text-inverse);
+  transform: translateY(-1px);
+}
+
+.nav-tab:not(.active):hover {
+  color: var(--text-secondary);
+  background: rgba(212, 184, 123, 0.1);
+}
+
+/* Loading States */
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--surface-hover);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--surface-hover);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-tertiary);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-lg);
+  opacity: 0.6;
+}
+
+.empty-state-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-title); /* Canela for titles */
+}
+
+.empty-state-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-body); /* Inter for body text */
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  gap: 0.5rem;
+  font-family: var(--font-ui); /* Avenir for UI elements */
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--text-inverse);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 184, 123, 0.3);
+}
+
+/* Footer */
+.app-footer {
+  background: rgba(19, 31, 40, 0.9);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  margin-top: auto;
+}
+
+.footer-help {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  flex-wrap: wrap;
+  font-family: var(--font-caption); /* Lato for captions */
+}
+
+.footer-help-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .concept-card-header {
+    padding: var(--space-sm) var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
+  }
+  
+  .concept-card-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .concept-card-content {
+    padding: 0 var(--space-sm) var(--space-sm);
+  }
+  
+  .concept-card-actions {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .concept-card-text {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .concept-card-author-name {
+    font-size: 0.8rem;
+    margin-bottom: 0.125rem;
+  }
+  
+  .concept-card-author-handle {
+    font-size: 0.7rem;
+  }
+  
+  .footer-help {
+    gap: var(--space-md);
+    font-size: 0.75rem;
+  }
+  
+  .app-title {
+    font-size: 1.25rem;
+  }
 }
