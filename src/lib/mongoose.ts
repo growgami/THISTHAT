@@ -1,29 +1,30 @@
 import mongoose from 'mongoose';
 
-// Define the cache type
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
+// Define the cache type for separate connections
+interface MongooseConnectionCache {
+  conn: mongoose.Connection | null;
+  promise: Promise<mongoose.Connection> | null;
 }
 
 // Extend the global type to include mongoose cache
 declare global {
-  var mongooseCache: MongooseCache | undefined;
+  var tweetsMongooseCache: MongooseConnectionCache | undefined;
+  var rankingMongooseCache: MongooseConnectionCache | undefined;
 }
 
-// Cache the mongoose connection
-const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null };
+// Cache the tweets mongoose connection
+const tweetsCache: MongooseConnectionCache = global.tweetsMongooseCache || { conn: null, promise: null };
 
-if (!global.mongooseCache) {
-  global.mongooseCache = cached;
+if (!global.tweetsMongooseCache) {
+  global.tweetsMongooseCache = tweetsCache;
 }
 
 export async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
+  if (tweetsCache.conn) {
+    return tweetsCache.conn;
   }
 
-  if (!cached.promise) {
+  if (!tweetsCache.promise) {
     const opts = {
       bufferCommands: false,
     };
@@ -34,15 +35,53 @@ export async function connectToDatabase() {
       throw new Error('TWEETS_MONGODB_URI environment variable is not defined');
     }
 
-    cached.promise = mongoose.connect(mongoUri, opts);
+    // Create a separate connection instance for tweets
+    tweetsCache.promise = mongoose.createConnection(mongoUri, opts).asPromise();
   }
 
   try {
-    cached.conn = await cached.promise;
+    tweetsCache.conn = await tweetsCache.promise;
   } catch (e) {
-    cached.promise = null;
+    tweetsCache.promise = null;
     throw e;
   }
 
-  return cached.conn;
-} 
+  return tweetsCache.conn;
+}
+
+// Cache the ranking mongoose connection
+const rankingCache: MongooseConnectionCache = global.rankingMongooseCache || { conn: null, promise: null };
+
+if (!global.rankingMongooseCache) {
+  global.rankingMongooseCache = rankingCache;
+}
+
+export async function connectToRankingDatabase() {
+  if (rankingCache.conn) {
+    return rankingCache.conn;
+  }
+
+  if (!rankingCache.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    // Ensure the environment variable is defined
+    const mongoUri = process.env.RANKING_MONGODB_URI;
+    if (!mongoUri) {
+      throw new Error('RANKING_MONGODB_URI environment variable is not defined');
+    }
+
+    // Create a separate connection instance for ranking
+    rankingCache.promise = mongoose.createConnection(mongoUri, opts).asPromise();
+  }
+
+  try {
+    rankingCache.conn = await rankingCache.promise;
+  } catch (e) {
+    rankingCache.promise = null;
+    throw e;
+  }
+
+  return rankingCache.conn;
+}

@@ -53,6 +53,19 @@
   --super-like: #8b5cf6;
   --super-like-light: #ede9fe;
   
+  /* Spotlight Colors - Dark Theme (Blue) */
+  --spotlight-first: hsla(210, 100%, 85%, .08);
+  --spotlight-first-mid: hsla(210, 100%, 55%, .02);
+  --spotlight-first-end: hsla(210, 100%, 45%, 0);
+  --spotlight-second: hsla(210, 100%, 85%, .06);
+  --spotlight-second-end: hsla(210, 100%, 55%, .02);
+  --spotlight-third: hsla(210, 100%, 85%, .04);
+  --spotlight-third-end: hsla(210, 100%, 45%, .02);
+  
+  /* Selected State Colors - Dark Theme */
+  --selected-bg: #FFFFFF;
+  --selected-text: #000000;
+  
   /* Shadows for Dark Theme */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
@@ -138,6 +151,19 @@
   --dislike-light: #fecaca;
   --super-like: #7c3aed;
   --super-like-light: #ddd6fe;
+  
+  /* Spotlight Colors - Light Theme (Gold/Yellow) */
+  --spotlight-first: hsla(45, 100%, 70%, .12);
+  --spotlight-first-mid: hsla(45, 100%, 60%, .04);
+  --spotlight-first-end: hsla(45, 100%, 50%, 0);
+  --spotlight-second: hsla(45, 100%, 70%, .08);
+  --spotlight-second-end: hsla(45, 100%, 60%, .03);
+  --spotlight-third: hsla(45, 100%, 70%, .06);
+  --spotlight-third-end: hsla(45, 100%, 50%, .02);
+  
+  /* Selected State Colors - Light Theme */
+  --selected-bg: #000000;
+  --selected-text: #FFFFFF;
   
   /* Shadows for Light Theme */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
@@ -524,6 +550,22 @@ body {
   border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+.loading-bar-container {
+  width: 100%;
+  height: 0.75rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--surface);
+  margin-bottom: 1.5rem;
+}
+
+.loading-bar-progress {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--primary);
+  transition: width 0.5s ease-out;
 }
 
 @keyframes spin {

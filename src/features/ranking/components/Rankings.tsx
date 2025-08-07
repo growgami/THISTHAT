@@ -3,9 +3,15 @@
 import Top3 from './Top3';
 import Rankers from './Rankers';
 import { useRankings } from '../hooks/useRankings';
+import { useEffect } from 'react';
 
 export default function Ranking() {
-  const { data, isLoading, error } = useRankings(24); // Get 24 authors for pagination
+  const { data, isLoading, error, refetch } = useRankings(24); // Get 24 authors for pagination
+
+  // Refetch data when component mounts
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (isLoading) {
     return (
@@ -36,8 +42,9 @@ export default function Ranking() {
   const allRankings = data?.rankings || [];
   
   // Get top 3 for the Top3 component
-  const top3Items = allRankings.slice(0, 3).map(item => ({
+  const top3Items = allRankings.slice(0, 3).map((item, index) => ({
     ...item,
+    id: index + 1, // Use the index+1 as the id for Top3 component
     avatar: item.author_pfp
   }));
 

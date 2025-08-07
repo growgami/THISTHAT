@@ -1,0 +1,293 @@
+# Rush Implementations
+
+This document outlines the implementation steps for the "to_rush_implementations" features mentioned in considerations.yaml.
+
+## Author Ranking System
+
+### Overview
+Implementation of an author ranking system based on tweet swipes, where authors earn points for each swipe their tweets receive.
+
+### Implementation Steps
+
+1. Create Author Points Schema
+   - Define MongoDB collection structure for author_points
+   - Include fields: author_id, author_name, author_username, points, last_updated
+   - Add indexes for efficient querying by author_id and sorting by points
+
+2. Implement Points Calculation Logic
+   - Create service to handle point calculations
+   - Define point values for different interaction types (swipe, like, share)
+   - Implement real-time point updates when interactions occur
+
+3. Create Author Ranking API
+   - Develop API endpoint to retrieve ranked authors
+   - Implement pagination for large result sets
+   - Add filtering options (time-based rankings, category-based rankings)
+
+4. Update Feed Algorithm
+   - Integrate author rankings into tweet feed algorithm
+   - Boost tweets from higher-ranked authors
+   - Implement weighting system for ranking influence
+
+5. Add Ranking Display
+   - Create UI components to display author rankings
+   - Implement leaderboard view
+   - Add personal ranking information to user profiles
+
+## Tweet Relations & Filtering
+
+### Overview
+Enhance tweet handling to incorporate author rankings and user interaction history.
+
+### Implementation Steps
+
+1. Enhance Tweet Schema
+   - Add author ranking metadata to tweet documents
+   - Include swipe history tracking fields
+   - Add category and tag relationship fields
+
+2. Implement Swipe History Tracking
+   - Update user_interactions collection with tweet references
+   - Create efficient queries to check if user swiped on specific tweets
+   - Implement exclusion logic in tweet feed queries
+
+3. Collection Tab Implementation
+   - Create API endpoint for retrieving user's swiped tweets
+   - Implement filtering and sorting options
+   - Design UI components for collection display
+
+4. Category-Based Tweet Display
+   - Enhance user_preferences collection with detailed category settings
+   - Implement category filtering in tweet queries
+   - Create onboarding UI for category selection
+
+## Referral System
+
+### Overview
+Implementation of a referral system with shareable links and cards.
+
+### Implementation Steps
+
+1. Referral Data Model
+   - Design PostgreSQL tables for referral tracking
+   - Include fields for referrer, referred user, referral code, status
+   - Add referral rewards tracking
+
+2. Referral Link Generation
+   - Implement unique referral code generation
+   - Create API endpoints for generating and validating referral links
+   - Add referral tracking to user registration flow
+
+3. Shareable Cards
+   - Design referral card templates
+   - Implement card generation service
+   - Add social sharing integration
+
+4. Referral Tracking & Rewards
+   - Implement referral success tracking
+   - Create reward distribution system
+   - Add referral statistics dashboard
+
+## Onboarding Experience
+
+### Overview
+Finalize and implement the user onboarding experience with category and tag selection.
+
+### Implementation Steps
+
+1. Category Selection Interface
+   - Design and implement category selection UI
+   - Create category data model
+   - Implement user preference storage
+
+2. Tag Selection Interface
+   - Design tag selection/exploration UI
+   - Implement tag search and filtering
+   - Add tag preference storage
+
+3. Onboarding Flow
+   - Create step-by-step onboarding wizard
+   - Implement progress tracking
+   - Add skip/defer options
+
+4. Preference Integration
+   - Connect onboarding selections to feed algorithm
+   - Implement preference-based content filtering
+   - Add preference management in user settings
+
+## Implementation Priorities
+
+1. First Priority: Tweet Relations & Filtering
+   - Essential for core user experience
+   - Builds on existing user_interactions collection
+   - Improves content relevance
+
+2. Second Priority: Author Ranking System
+   - Enhances content discovery
+   - Provides engagement metrics
+   - Supports gamification elements
+
+3. Third Priority: Onboarding Experience
+   - Improves new user experience
+   - Personalizes content from sign-up
+   - Increases user retention
+
+4. Fourth Priority: Referral System
+   - Drives user acquisition
+   - Can be implemented independently
+   - Supports growth objectives
+
+## Technical Considerations
+
+- Ensure all new features work with existing dual-database architecture
+- Implement proper caching for ranking and preference data
+- Add monitoring for new API endpoints
+- Consider performance impact of real-time ranking updates
+- Implement proper error handling and fallbacks
+
+## Files to Create
+
+### Author Ranking System
+
+**MongoDB Schema:**
+- `src/lib/db/schema/mongo/authorRankingSchema.ts` - New schema for author ranking system
+  - AuthorPoints collection interface
+  - Indexes for efficient querying
+  - Type guards for validation
+
+**API Endpoints:**
+- `src/app/api/authors/ranking/route.ts` - API endpoint for retrieving ranked authors
+- `src/app/api/authors/[authorId]/points/route.ts` - API endpoint for individual author points
+
+**Services:**
+- `src/features/authors/services/authorRankingService.ts` - Service to handle point calculations and ranking logic
+- `src/features/authors/hooks/useAuthorRanking.ts` - Hook for consuming author ranking data
+
+**UI Components:**
+- `src/features/authors/components/AuthorLeaderboard.tsx` - Leaderboard view for author rankings
+- `src/features/authors/components/AuthorRankCard.tsx` - Individual author rank display
+- `src/features/profile/components/AuthorRankingSection.tsx` - Author ranking information in user profiles
+
+### Enhanced Tweet Relations & Filtering
+
+**MongoDB Schema Updates:**
+- Updates to `src/lib/db/schema/mongo/schema.ts` (existing file)
+  - Add author ranking metadata to Tweet interface
+  - Add swipe history tracking fields to Tweet interface
+  - Add category and tag relationship fields to Tweet interface
+
+**API Endpoints:**
+- `src/app/api/users/[userId]/collections/swiped/route.ts` - API endpoint for retrieving user's swiped tweets
+- `src/app/api/tweets/feed/enhanced/route.ts` - Enhanced tweet feed with author ranking integration
+
+**Services:**
+- `src/features/tweets/services/tweetRelationService.ts` - Service for handling tweet relations and filtering logic
+- `src/features/tweets/hooks/useTweetCollections.ts` - Hook for managing user's tweet collections
+- `src/features/tweets/hooks/useEnhancedFeed.ts` - Hook for enhanced feed with author rankings
+
+**UI Components:**
+- `src/features/tweets/components/TweetCollectionTab.tsx` - Tab for displaying user's collected tweets
+- `src/features/onboarding/components/CategorySelection.tsx` - Category selection interface for onboarding
+- `src/features/onboarding/components/TagSelection.tsx` - Tag selection interface for onboarding
+
+### Referral System
+
+**MongoDB Schema:**
+- `src/lib/db/schema/mongo/referralSchema.ts` - Schema for referral system (if not already created)
+  - Referral collection interface
+  - ReferralCode collection interface
+  - Indexes for efficient querying
+
+**API Endpoints:**
+- `src/app/api/referrals/code/route.ts` - API endpoint for getting/creating referral codes
+- `src/app/api/referrals/redeem/route.ts` - API endpoint for redeeming referral codes
+- `src/app/api/referrals/history/route.ts` - API endpoint for referral history
+- `src/app/api/referrals/stats/route.ts` - API endpoint for referral statistics
+
+**Services:**
+- `src/features/referrals/services/referralService.ts` - Service for handling referral logic
+- `src/features/referrals/hooks/useReferral.ts` - Hook for referral functionality
+
+**UI Components:**
+- `src/features/referrals/components/ReferralCard.tsx` - Main UI component for referral information
+- `src/features/referrals/components/ReferralModal.tsx` - Modal for entering referral codes
+- `src/features/referrals/components/ReferralShareCard.tsx` - Shareable referral card component
+
+### Onboarding Experience
+
+**UI Components:**
+- `src/features/onboarding/components/OnboardingWizard.tsx` - Step-by-step onboarding wizard
+- `src/features/onboarding/components/CategorySelectionStep.tsx` - Category selection step in onboarding
+- `src/features/onboarding/components/TagSelectionStep.tsx` - Tag selection step in onboarding
+- `src/features/onboarding/components/PreferenceIntegrationStep.tsx` - Preference integration step
+
+**Services:**
+- `src/features/onboarding/services/onboardingService.ts` - Service for handling onboarding flow
+- `src/features/onboarding/hooks/useOnboarding.ts` - Hook for managing onboarding state
+
+### Integration Updates
+
+**Feed Algorithm Updates:**
+- `src/features/feed/services/feedAlgorithmService.ts` - Update to integrate author rankings into tweet feed algorithm
+- `src/features/feed/hooks/useFeed.ts` - Update to use enhanced feed algorithm
+
+## Data Models Implementation
+
+### Author Ranking System Data Model
+
+**MongoDB Schema:**
+- `src/lib/db/schema/mongo/authorRankingSchema.ts` - Schema for author ranking system
+  - AuthorPoints collection interface:
+    - author_id: string (unique identifier)
+    - author_name: string (display name)
+    - author_username: string (twitter handle)
+    - points: number (total swipe points)
+    - last_updated: Date (timestamp of last update)
+  - Indexes for efficient querying by author_id and sorting by points
+  - Type guards for validation
+
+### Tweet Filtering System Data Model
+
+**MongoDB Schema Updates:**
+- Updates to `src/lib/db/schema/mongo/schema.ts` (existing file)
+  - Add swipe history tracking to UserInteraction interface
+  - Enhance Tweet interface with ranking metadata
+  - Add category and tag relationship fields to Tweet interface
+
+### Category-Based Recommendations Data Model
+
+**MongoDB Schema Updates:**
+- Updates to `src/lib/db/schema/mongo/schema.ts` (existing file)
+  - Enhance UserPreferences interface with category weighting
+  - Add tag preference fields to UserPreferences interface
+  - Add recommendation state tracking to UserPreferences interface
+
+### Referral System Data Model
+
+**MongoDB Schema:**
+- `src/lib/db/schema/mongo/referralSchema.ts` - Schema for referral system
+  - Referral collection interface:
+    - referrer_id: string (user ID of person who shared)
+    - referred_id: string (user ID of person who joined)
+    - referral_code: string (unique referral code)
+    - status: 'pending' | 'completed' | 'expired'
+    - created_at: Date
+    - completed_at: Date (when referral was completed)
+  - ReferralCode collection interface:
+    - code: string (unique referral code)
+    - creator_id: string (user ID who created the code)
+    - usage_limit: number (maximum number of uses)
+    - used_count: number (current number of uses)
+    - created_at: Date
+    - expires_at: Date
+  - Indexes for efficient querying
+  - Type guards for validation
+
+### Onboarding Experience Data Model
+
+**MongoDB Schema Updates:**
+- Updates to `src/lib/db/schema/mongo/schema.ts` (existing file)
+  - Enhance UserPreferences interface with onboarding completion state
+  - Add onboarding step tracking to UserPreferences interface
+  - Add category selection storage to UserPreferences interface
+  - Add tag selection storage to UserPreferences interface

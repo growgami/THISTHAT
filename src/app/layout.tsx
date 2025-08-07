@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter, Lato } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/lib/react-query";
+import AuthProvider from "@/features/auth/providers/AuthProvider";
+import { initializeCreditScheduler } from "@/features/credits/allocation/services/initScheduler";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/features/auth/lib/auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,19 +24,29 @@ export const metadata: Metadata = {
   description: "Your social Tinder",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Initialize credit scheduler on server startup
+  if (typeof window === 'undefined') {
+    initializeCreditScheduler();
+  }
+
+  // Fetch the server session to pass down via SessionProvider
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${lato.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          {children}
-        </ReactQueryProvider>
+        <AuthProvider session={session}>
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

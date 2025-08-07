@@ -1,0 +1,120 @@
+considerations:
+  tweet_filtering:
+    description: "We shall not be showing the user tweets that they already swiped on"
+    implementation:
+      1. store swiped tweets in user_interactions collection
+      2. query user_interactions to check if tweet was swiped
+      3. exclude swiped tweets from feed display
+      4. display swiped tweets in collection tab via user_interactions query
+
+  to_rush_implementations:
+    database_related:
+      rankings:
+        description: "Author ranking system based on tweet swipes"
+        implementation:
+          - each swipe earns points for the tweet author
+          - authors ranked by total swipe points
+          - data stored in author_points collection
+          - points updated in real-time per swipe
+          - data_model:
+              author_id: "unique identifier"
+              author_name: "display name"
+              author_username: "twitter handle"
+              points: "total swipe points"
+              last_updated: "timestamp of last update"
+      
+      tweets:
+        fetching: "tweets fetched from MongoDB"
+        relations:
+          - related to author_points for swipe-based ranking
+          - related to user_interactions for collection display
+        categories:
+          - displayed based on user onboarding choices
+          - stored in user_preferences collection
+
+      referral system:
+        - share links
+        - share card
+      
+      onboarding experience:
+        - finalize the categories and tags
+
+additional_considerations:
+  author_points_system:
+    implementation_details:
+      - author_points collection/table structure definition
+      - points calculation logic (weighted swipes)
+      - real-time vs batch processing strategy
+      - leaderboard integration approach
+    performance_considerations:
+      - indexing strategy (author_id, last_updated)
+      - caching for frequently accessed rankings
+      - sharding/partitioning for high volume
+    data_consistency:
+      - consistency between user_interactions and author_points
+      - transaction handling for point updates
+      - rollback mechanisms for failed calculations
+
+  tweet_filtering_implementation:
+    performance_optimization:
+      - efficient user_interactions querying
+      - indexing for user_id + tweet_id lookups
+      - caching to reduce database queries
+    query_strategy:
+      - NOT IN queries vs LEFT JOIN approaches
+      - pagination for large datasets
+      - real-time vs pre-computed filtering
+
+  category_based_recommendations:
+    implementation_details:
+      - efficient category preference querying
+      - weighted scoring mechanism
+      - personalized recommendation algorithm
+    performance_considerations:
+      - indexing for categories and tags
+      - recommendation result caching
+      - real-time vs batch generation
+
+  data_archiving_and_retention:
+    retention_policies:
+      - user interaction data retention period
+      - older interactions archiving strategy
+      - GDPR compliance implementation
+    privacy_considerations:
+      - data anonymization for analytics
+      - right to be forgotten
+      - data portability
+
+  analytics_and_reporting:
+    engagement_tracking:
+      - real-time vs batch author metrics
+      - content_performance updates
+      - trending metrics calculation
+    reporting_infrastructure:
+      - data warehouse design
+      - ETL processes
+      - real-time dashboard data
+
+  error_handling_and_recovery:
+    fault_tolerance:
+      - failed point calculation handling
+      - data inconsistency detection
+      - rollback mechanisms
+    backup_and_recovery:
+      - critical data backup strategies
+      - point-in-time recovery
+      - disaster recovery procedures
+
+  performance_and_scaling:
+    indexing_strategy:
+      - comprehensive index design
+      - composite indexes for complex queries
+      - index maintenance optimization
+    caching_strategy:
+      - multi-level caching (app, db, cdn)
+      - cache invalidation strategies
+      - cache warming for popular content
+    scaling_considerations:
+      - horizontal scaling strategies
+      - read replica configuration
+      - database sharding approach

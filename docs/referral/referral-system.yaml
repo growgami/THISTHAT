@@ -1,0 +1,265 @@
+referral_system:
+  title: "Referral System Implementation Plan"
+  description: "A comprehensive plan for implementing a referral system with database schema, API endpoints, and UI components"
+  
+  database:
+    mongodb:
+      collections:
+        - name: "referrals"
+          description: "Tracks referral relationships and rewards"
+          fields:
+            - name: "_id"
+              type: "ObjectId"
+              description: "Unique identifier for the referral record"
+            - name: "referrerId"
+              type: "ObjectId"
+              description: "User ID of the person who referred someone"
+              indexed: true
+            - name: "referredId"
+              type: "ObjectId"
+              description: "User ID of the person who was referred"
+              indexed: true
+              unique: true
+            - name: "referralCode"
+              type: "string"
+              description: "Unique referral code used for tracking"
+              indexed: true
+              unique: true
+            - name: "status"
+              type: "string"
+              description: "Status of the referral (pending, completed, expired)"
+              enum: ["pending", "completed", "expired"]
+            - name: "rewardCredits"
+              type: "number"
+              description: "Number of credits awarded for successful referral"
+            - name: "createdAt"
+              type: "Date"
+              description: "When the referral relationship was created"
+            - name: "completedAt"
+              type: "Date"
+              description: "When the referral was completed (nullable)"
+          indexes:
+            - fields: ["referrerId"]
+            - fields: ["referredId"]
+            - fields: ["referralCode"]
+            - fields: ["status"]
+        
+        - name: "referral_codes"
+          description: "Stores referral codes and their metadata"
+          fields:
+            - name: "_id"
+              type: "ObjectId"
+            - name: "userId"
+              type: "ObjectId"
+              description: "User ID who owns this referral code"
+              indexed: true
+            - name: "code"
+              type: "string"
+              description: "The actual referral code"
+              indexed: true
+              unique: true
+            - name: "isActive"
+              type: "boolean"
+              description: "Whether the code is currently active"
+            - name: "usageCount"
+              type: "number"
+              description: "How many times this code has been used"
+            - name: "maxUses"
+              type: "number"
+              description: "Maximum number of times this code can be used (null for unlimited)"
+            - name: "createdAt"
+              type: "Date"
+            - name: "expiresAt"
+              type: "Date"
+              description: "When this code expires (nullable for never)"
+          indexes:
+            - fields: ["userId"]
+            - fields: ["code"]
+            - fields: ["isActive"]
+    
+  api_endpoints:
+    - path: "GET /api/referrals/code"
+      description: "Get user's referral code"
+      auth_required: true
+      response:
+        referralCode: "string"
+        usageCount: "number"
+        maxUses: "number | null"
+        isActive: "boolean"
+    
+    - path: "POST /api/referrals/generate"
+      description: "Generate a new referral code for the user"
+      auth_required: true
+      request:
+        maxUses: "number | null (optional)"
+        expiresAt: "string (ISO date, optional)"
+      response:
+        referralCode: "string"
+    
+    - path: "POST /api/referrals/redeem"
+      description: "Redeem a referral code"
+      auth_required: true
+      request:
+        referralCode: "string"
+      response:
+        success: "boolean"
+        message: "string"
+        creditsAwarded: "number"
+    
+    - path: "GET /api/referrals/history"
+      description: "Get user's referral history"
+      auth_required: true
+      response:
+        referrals: "array of referral objects"
+    
+    - path: "GET /api/referrals/stats"
+      description: "Get user's referral statistics"
+      auth_required: true
+      response:
+        totalReferrals: "number"
+        pendingReferrals: "number"
+        completedReferrals: "number"
+        totalCreditsEarned: "number"
+  
+  components:
+    - name: "ReferralCard"
+      path: "src/features/referrals/components/ReferralCard.tsx"
+      description: "Main UI component for displaying referral information and actions"
+      props:
+        referralCode: "string"
+        usageCount: "number"
+        maxUses: "number | null"
+        isActive: "boolean"
+        onGenerateCode: "() => void"
+        onCopyCode: "() => void"
+      features:
+        - "Display current referral code"
+        - "Show usage statistics"
+        - "Generate new referral code button"
+        - "Copy referral code to clipboard"
+        - "Share referral code via social media"
+        - "Display referral rewards information"
+    
+    - name: "ReferralModal"
+      path: "src/features/referrals/components/ReferralModal.tsx"
+      description: "Modal for entering referral codes"
+      props:
+        isOpen: "boolean"
+        onClose: "() => void"
+        onRedeem: "(code: string) => void"
+      features:
+        - "Input field for referral code"
+        - "Redeem button"
+        - "Error/success messaging"
+  
+  referral_links:
+    description: "Referral links functionality for sharing and tracking referrals via URLs"
+    link_formats:
+      - "https://thisthat.app/?ref={referralCode}"
+      - "https://thisthat.app/signup?referral={referralCode}"
+      - "https://thisthat.app/join/{referralCode}"
+    components:
+      - name: "ReferralLinkGenerator"
+        path: "src/features/referrals/components/ReferralLinkGenerator.tsx"
+        description: "Component for generating and sharing referral links"
+        props:
+          referralCode: "string"
+          onCopyLink: "() => void"
+          onShareLink: "() => void"
+        features:
+          - "Generate shareable referral link"
+          - "Copy link to clipboard"
+          - "Social media sharing buttons"
+          - "QR code generation"
+          - "Link analytics tracking"
+      
+      - name: "ReferralLandingPage"
+        path: "src/features/referrals/components/ReferralLandingPage.tsx"
+        description: "Landing page for handling referral link visits"
+        props:
+          referralCode: "string"
+          onRedeem: "() => void"
+        features:
+          - "Parse referral code from URL parameters"
+          - "Auto-apply referral code during signup"
+          - "Display personalized referrer information"
+          - "Track referral source attribution"
+    
+    api_endpoints:
+      - path: "GET /api/referrals/link"
+        description: "Generate shareable referral link for current user"
+        auth_required: true
+        response:
+          link: "string"
+      
+      - path: "GET /api/referrals/validate"
+        description: "Validate referral code from URL parameter"
+        parameters:
+          code: "string"
+        response:
+          isValid: "boolean"
+          referrerName: "string"
+  
+  hooks:
+    - name: "useReferrals"
+      path: "src/features/referrals/hooks/useReferrals.ts"
+      description: "Custom hook for managing referral state and API calls"
+      functions:
+        - "getReferralCode"
+        - "generateReferralCode"
+        - "redeemReferralCode"
+        - "getReferralHistory"
+        - "getReferralStats"
+  
+  services:
+    - name: "ReferralService"
+      path: "src/features/referrals/services/referralService.ts"
+      description: "Service for handling referral-related API calls and business logic"
+      methods:
+        - "fetchReferralCode"
+        - "createReferralCode"
+        - "redeemCode"
+        - "getReferralHistory"
+        - "getReferralStats"
+  
+  constants:
+    - name: "referralDefaults"
+      path: "src/features/referrals/constants/referralDefaults.ts"
+      description: "Default values and constants for the referral system"
+      exports:
+        - "DEFAULT_REFERRAL_CREDITS"
+        - "REFERRAL_CODE_LENGTH"
+        - "REFERRAL_CODE_CHARS"
+  
+  types:
+    - name: "referralTypes"
+      path: "src/types/referral.ts"
+      description: "TypeScript interfaces and types for the referral system"
+      interfaces:
+        - "Referral"
+        - "ReferralCode"
+        - "ReferralStats"
+  
+  integration_points:
+    - location: "Account.tsx"
+      description: "Add ReferralCard to the Account page under a new 'Referrals' tab"
+    - location: "Onboarding flow"
+      description: "Add ReferralModal to appear after account creation"
+    - location: "Credit system"
+      description: "Integrate with existing credit system for awarding referral credits"
+    - location: "User profile"
+      description: "Display referral stats on user profile pages"
+  
+  implementation_steps:
+    - "Create database schemas for MongoDB"
+    - "Implement API endpoints for referral operations"
+    - "Create referral service and hooks"
+    - "Develop ReferralCard and ReferralModal components"
+    - "Develop ReferralLinkGenerator and ReferralLandingPage components"
+    - "Implement referral link API endpoints"
+    - "Integrate with Account page"
+    - "Add to onboarding flow"
+    - "Connect with credit system"
+    - "Add analytics and tracking"
+    - "Implement admin dashboard features"
+    - "Add tests and documentation"

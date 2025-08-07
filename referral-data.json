@@ -1,0 +1,32 @@
+{
+  "referralCodes": [
+    {
+      "userId": "user1",
+      "code": "ABC123DE",
+      "isActive": true,
+      "usageCount": 2,
+      "maxUses": 10,
+      "createdAt": "2025-08-05T21:00:56.381Z",
+      "expiresAt": null
+    },
+    {
+      "userId": "user2",
+      "code": "XYZ789FG",
+      "isActive": true,
+      "usageCount": 0,
+      "maxUses": 5,
+      "createdAt": "2025-08-05T21:00:56.381Z",
+      "expiresAt": null
+    },
+    {
+      "userId": "1646197566181363713",
+      "code": "AVTG4LHE",
+      "isActive": true,
+      "usageCount": 0,
+      "maxUses": null,
+      "createdAt": "2025-08-05T21:00:56.392Z",
+      "expiresAt": null
+    }
+  ],
+  "referrals": []
+}

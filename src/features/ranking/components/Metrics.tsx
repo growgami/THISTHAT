@@ -1,4 +1,4 @@
-'use client';
+import Image from 'next/image';
 
 interface MetricsProps {
   streak?: number;
@@ -75,10 +75,12 @@ export default function Metrics({
         {/* Tweet Content */}
         <div className="bg-[#2A3441] rounded-md p-3 mb-2">
           <div className="flex items-start gap-2 mb-2">
-            <img 
+            <Image 
               src={globalMostLikedTweet.avatar || defaultAvatar} 
               alt={globalMostLikedTweet.author}
-              className="w-6 h-6 rounded-full object-cover flex-shrink-0"
+              width={24}
+              height={24}
+              className="rounded-full object-cover flex-shrink-0"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">

@@ -1,4 +1,4 @@
-import PageContent from '@/components/main/PageContent';
+import PageContent from '@/components/containers/main/PageContent';
 
 export default function Home() {
   return <PageContent />;
