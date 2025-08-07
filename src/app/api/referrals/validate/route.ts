@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
-import { findReferralCodeByCode } from '@/lib/mockData/referralStore';
+import { connectToReferralsDatabase, findReferralCodeByCode } from '@/models/Referrals';
 
 export async function GET(request: Request) {
   try {
+    // Connect to MongoDB
+    await connectToReferralsDatabase();
     
     // Note: This endpoint doesn't require authentication as it's used for validating
     // referral codes from potential new users
@@ -15,7 +17,7 @@ export async function GET(request: Request) {
     }
     
     // Find the referral code
-    const codeRecord = findReferralCodeByCode(code);
+    const codeRecord = await findReferralCodeByCode(code);
     
     if (!codeRecord) {
       return NextResponse.json({ isValid: false, message: 'Invalid referral code' });

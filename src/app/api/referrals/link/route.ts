@@ -1,19 +1,22 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/features/auth/lib/auth';
-import { findReferralCodeByUserId } from '@/lib/mockData/referralStore';
+import { connectToReferralsDatabase, findReferralCodeByUserId } from '@/models/Referrals';
 import { REFERRAL_LINK_BASE } from '@/features/referrals/constants/referralDefaults';
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
+    // Connect to MongoDB
+    await connectToReferralsDatabase();
+    
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
     // Find existing referral code for user
-    const userReferralCode = findReferralCodeByUserId(session.user.id);
+    const userReferralCode = await findReferralCodeByUserId(session.user.id);
     
     if (!userReferralCode) {
       return NextResponse.json({ error: 'Referral code not found' }, { status: 404 });

@@ -48,45 +48,53 @@ export function useLoader() {
             const tweetCount = data.tweets?.length || 0;
             setLoaderState({
               isLoading: true,
-              progress: 70,
-              message: tweetCount > 0 ? 'Tweets loaded successfully' : 'Connected to database'
+              progress: 60,
+              message: `Loaded ${tweetCount} sample tweets`
             });
           } else {
-            throw new Error('API not responding');
+            throw new Error(`API returned status ${response.status}`);
           }
-        } catch (apiError) {
-          console.warn('Could not fetch tweets:', apiError);
-          setLoaderState({
-            isLoading: true,
-            progress: 70,
-            message: 'Loading offline mode...'
-          });
+        } catch (error) {
+          console.error('Error testing tweets API:', error);
+          // Continue loading even if this test fails
         }
 
-        // Step 3: Final setup
-        await new Promise(resolve => setTimeout(resolve, 200));
-        
+        // Step 3: Warm up ranking database connection
         setLoaderState({
           isLoading: true,
-          progress: 90,
-          message: 'Finalizing...'
+          progress: 70,
+          message: 'Initializing ranking system...'
         });
 
-        // Small delay to show completion
-        await new Promise(resolve => setTimeout(resolve, 300));
+        try {
+          // Warm up the ranking database connection by making a quick API call
+          // This will establish the connection early so it's ready when needed
+          await fetch('/api/rankings?limit=1');
+          
+          setLoaderState({
+            isLoading: true,
+            progress: 80,
+            message: 'Ranking system ready'
+          });
+        } catch (error) {
+          console.error('Error warming up ranking database:', error);
+          // Continue loading even if this fails
+        }
+
+        // Step 4: Finalize loading
+        await new Promise(resolve => setTimeout(resolve, 200));
         
-        // Complete loading
         setLoaderState({
           isLoading: false,
           progress: 100,
           message: 'Ready!'
         });
       } catch (error) {
-        console.error('Error during loading:', error);
+        console.error('Error during application load:', error);
         setLoaderState({
           isLoading: false,
           progress: 100,
-          message: 'Ready with errors'
+          message: 'Error during initialization'
         });
       }
     };

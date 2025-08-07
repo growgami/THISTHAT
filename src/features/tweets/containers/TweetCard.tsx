@@ -6,7 +6,7 @@ import TweetCardHeader from '@/features/tweets/components/TweetCardHeader';
 import TweetCardContent from '@/features/tweets/components/TweetCardContent';
 import SwipeIndicators from '@/features/tweets/components/SwipeIndicators';
 import SwipeAnimation from '@/features/tweets/animations/Swipe';
-import { useRanking } from '@/features/tweets/hooks/useAwardPoints';
+import { useRanking } from '@/features/award/hooks/useAwardPoints';
 import {
   overlayVariants,
   overlayTextVariants,

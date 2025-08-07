@@ -6,7 +6,7 @@ import { useRankings } from '../hooks/useRankings';
 import { useEffect } from 'react';
 
 export default function Ranking() {
-  const { data, isLoading, error, refetch } = useRankings(24); // Get 24 authors for pagination
+  const { data, isLoading, error, refetch } = useRankings(100); // Fetch enough authors to include all with points
 
   // Refetch data when component mounts
   useEffect(() => {

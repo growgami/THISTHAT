@@ -10,14 +10,16 @@ interface RankersProps {
 
 export default function Rankers({ allRankings }: RankersProps) {
   const itemsPerPage = 8;
-  const totalPages = Math.ceil(allRankings.length / itemsPerPage);
+  // Only include rankers that have points
+  const ranked = allRankings.filter((r) => r.score > 0);
+  const totalPages = Math.ceil(ranked.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Get current page items
   const getCurrentPageItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return allRankings.slice(startIndex, endIndex);
+    return ranked.slice(startIndex, endIndex);
   };
 
   const goToPage = (page: number) => {
@@ -27,6 +29,7 @@ export default function Rankers({ allRankings }: RankersProps) {
   };
 
   const rankings = getCurrentPageItems();
+  const maxScore = ranked.length ? Math.max(...ranked.map((r) => r.score)) : 1;
 
   return (
     <div className="bg-background p-12 rounded-lg max-w-2xl w-full">
@@ -60,11 +63,11 @@ export default function Rankers({ allRankings }: RankersProps) {
               <div
                 className="h-8 bg-[#3a3a3c] rounded-sm transition-all duration-300 hover:bg-[#B0B0B0]"
                 style={{ 
-                  width: `${Math.min(100, Math.max(20, (item.score / Math.max(...allRankings.map(r => r.score))) * 100))}%`,
+                  width: `${Math.min(100, Math.max(20, (item.score / maxScore) * 100))}%`,
                 }}
               />
               {/* Rank number overlay */}
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#2A3441] font-medium text-sm">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white font-medium text-sm">
                 #{item.rank}
               </span>
             </div>
@@ -87,7 +90,7 @@ export default function Rankers({ allRankings }: RankersProps) {
         <button
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-[#A0A0A0] text-[#2A3441] rounded-sm font-medium text-sm hover:bg-[#B0B0B0] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          className="px-4 py-2 bg-[#2A3441] text-white rounded-sm font-medium text-sm hover:bg-[#243042] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
           Previous
         </button>
@@ -99,7 +102,7 @@ export default function Rankers({ allRankings }: RankersProps) {
               onClick={() => goToPage(page)}
               className={`px-3 py-2 rounded-sm font-medium text-sm transition-all duration-300 ${
                 currentPage === page
-                  ? 'bg-[#3a3a3c] text-[#2A3441]'
+                  ? 'bg-primary text-black border border-black hover:bg-white'
                   : 'bg-[#3a3a3c] text-white hover:bg-[#909090]'
               }`}
             >
@@ -110,8 +113,8 @@ export default function Rankers({ allRankings }: RankersProps) {
         
         <button
           onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-[#3a3a3c] text-[#2A3441] rounded-sm font-medium text-sm hover:bg-[#B0B0B0] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          disabled={currentPage >= totalPages}
+          className="px-4 py-2 bg-[#2A3441] text-white rounded-sm font-medium text-sm hover:bg-[#243042] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
           Next
         </button>

@@ -19,14 +19,14 @@ export class ReferralService {
     return response.json();
   }
 
-  async generateReferralCode(maxUses?: number, expiresAt?: string): Promise<ReferralCode> {
+  async generateReferralCode(): Promise<ReferralCode> {
     const response = await fetch(`${this.baseUrl}/generate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ maxUses, expiresAt }),
+      body: JSON.stringify({}),
     });
 
     if (!response.ok) {

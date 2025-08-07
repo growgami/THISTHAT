@@ -6,6 +6,7 @@ import AuthProvider from "@/features/auth/providers/AuthProvider";
 import { initializeCreditScheduler } from "@/features/credits/allocation/services/initScheduler";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/features/auth/lib/auth";
+import { ReferralTracker } from "@/features/referrals/components/ReferralTracker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +45,7 @@ export default async function RootLayout({
       >
         <AuthProvider session={session}>
           <ReactQueryProvider>
+            <ReferralTracker />
             {children}
           </ReactQueryProvider>
         </AuthProvider>

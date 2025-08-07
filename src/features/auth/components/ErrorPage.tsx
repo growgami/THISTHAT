@@ -14,6 +14,7 @@ export default function ErrorPage() {
     'Configuration': 'There is a problem with the server configuration.',
     'AccessDenied': 'You do not have permission to sign in.',
     'Verification': 'The verification token has expired or has already been used.',
+    'RefreshTokenInvalid': 'Your session has expired. Please sign in again.',
     'Default': 'An unknown error occurred. Please try again later.'
   };
   

@@ -3,7 +3,6 @@ export interface Referral {
   referrerId: string;
   referredId: string;
   referralCode: string;
-  status: 'pending' | 'completed' | 'expired';
   rewardCredits: number;
   createdAt: Date;
   completedAt?: Date;
@@ -13,11 +12,8 @@ export interface ReferralCode {
   id: string;
   userId: string;
   code: string;
-  isActive: boolean;
   usageCount: number;
-  maxUses: number | null;
   createdAt: Date;
-  expiresAt?: Date;
 }
 
 export interface ReferralStats {
@@ -35,7 +31,6 @@ export interface ReferralHistoryItem {
     email: string;
   };
   referralCode: string;
-  status: 'pending' | 'completed' | 'expired';
   creditsAwarded: number;
   createdAt: Date;
   completedAt?: Date;

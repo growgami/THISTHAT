@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { referralService } from '../services/referralService';
 import { ReferralCode, ReferralStats, ReferralHistoryItem } from '@/types/referral';
 
@@ -10,7 +10,7 @@ export const useReferrals = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchReferralCode = async () => {
+  const fetchReferralCode = useCallback(async () => {
     try {
       setLoading(true);
       const code = await referralService.getReferralCode();
@@ -20,12 +20,12 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const generateReferralCode = async (maxUses?: number, expiresAt?: string) => {
+  const generateReferralCode = useCallback(async () => {
     try {
       setLoading(true);
-      const code = await referralService.generateReferralCode(maxUses, expiresAt);
+      const code = await referralService.generateReferralCode();
       setReferralCode(code);
       return code;
     } catch (err) {
@@ -34,9 +34,9 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const redeemReferralCode = async (code: string) => {
+  const redeemReferralCode = useCallback(async (code: string) => {
     try {
       setLoading(true);
       const result = await referralService.redeemReferralCode(code);
@@ -47,9 +47,9 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchReferralStats = async () => {
+  const fetchReferralStats = useCallback(async () => {
     try {
       setLoading(true);
       const stats = await referralService.getReferralStats();
@@ -59,9 +59,9 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchReferralHistory = async () => {
+  const fetchReferralHistory = useCallback(async () => {
     try {
       setLoading(true);
       const history = await referralService.getReferralHistory();
@@ -71,9 +71,9 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const getReferralLink = async () => {
+  const getReferralLink = useCallback(async () => {
     try {
       setLoading(true);
       const link = await referralService.getReferralLink();
@@ -85,7 +85,7 @@ export const useReferrals = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);

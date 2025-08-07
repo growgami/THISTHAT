@@ -1,0 +1,132 @@
+[
+   {
+      "category": "Platform Updates",
+      "description": "Official updates and announcements about the platform's features and releases.",
+      "tags": [
+        {"name": "Feature Releases", "description": "Announcements of new features and functionalities."},
+        {"name": "Patch Notes", "description": "Details of bug fixes and minor improvements."},
+        {"name": "Roadmap Announcements", "description": "Updates on the project roadmap and future plans."},
+        {"name": "Community News", "description": "News and updates relevant to the user community."},
+        {"name": "Product Launches", "description": "Official announcements of new product launches."},
+        {"name": "Protocol Upgrades", "description": "Major protocol upgrades and improvements."}
+      ]
+   },
+   {
+      "category": "Ecosystem & Integrations",
+      "description": "Information about integrations, partnerships, and ecosystem growth.",
+      "tags": [
+        {"name": "New Integrations", "description": "Introduction of new integrations with other platforms or services."},
+        {"name": "Partner Launches", "description": "Announcements of new partner projects or collaborations."},
+        {"name": "Developer Tools", "description": "Resources and tools for developers within the ecosystem."},
+        {"name": "Third-Party Apps", "description": "Applications built by external teams or organizations."},
+        {"name": "API Updates", "description": "Changes and updates to the platform's APIs."},
+        {"name": "Cross-chain Deployments", "description": "New cross-chain implementations and deployments."},
+        {"name": "Infrastructure Improvements", "description": "Core infrastructure and integration enhancements."}
+      ]
+   },
+   {
+      "category": "Technical Insights",
+      "description": "Technical explanations, improvements, and deep dives into the platform.",
+      "tags": [
+        {"name": "Architecture Deep Dive", "description": "In-depth analysis of the system architecture."},
+        {"name": "Performance Improvements", "description": "Enhancements that improve system speed and efficiency."},
+        {"name": "Security Updates", "description": "Information about security enhancements and fixes."},
+        {"name": "Code Tutorials", "description": "Educational content for developers and users."},
+        {"name": "Bug Fixes", "description": "Notices about resolved bugs and issues."},
+        {"name": "Zero Knowledge Proofs", "description": "Technical discussions about ZK-STARKs, zero-knowledge proofs, and related technologies."},
+        {"name": "Layer 2 Scaling", "description": "Technical insights into Layer 2 scaling solutions and implementations."}
+      ]
+   },
+   {
+      "category": "Economy & Markets",
+      "description": "Updates and analysis on funding, tokens, and market trends.",
+      "tags": [
+        {"name": "Funding News", "description": "Announcements about funding rounds and investments."},
+        {"name": "Tokenomics", "description": "Information about the token economy and mechanisms."},
+        {"name": "Market Analysis", "description": "Insights and analysis of market trends and data."},
+        {"name": "Partnerships", "description": "News about business partnerships and alliances."},
+        {"name": "Grants & Incentives", "description": "Details about grants, rewards, and incentive programs."},
+        {"name": "Stablecoin Developments", "description": "Updates on stablecoin ecosystem developments and technical integrations."},
+        {"name": "Reserve Transparency", "description": "Reports and updates on reserve transparency and auditing."},
+        {"name": "Regulatory Updates", "description": "News and analysis of regulatory developments affecting operations."}
+      ]
+   },
+   {
+      "category": "Community & Culture",
+      "description": "Content highlighting community members, culture, and events.",
+      "tags": [
+        {"name": "User Stories", "description": "Personal stories and experiences from users."},
+        {"name": "Thought Leadership", "description": "Opinion pieces and insights from community leaders."},
+        {"name": "Memes & Culture", "description": "Fun and cultural content, including memes."},
+        {"name": "Community Highlights", "description": "Spotlights on notable community achievements and members."},
+        {"name": "Events & Meetups", "description": "Information about community events and gatherings."},
+        {"name": "KOL Sentiment", "description": "Analysis of key opinion leaders' sentiment and market outlook."},
+        {"name": "Trader Sentiment", "description": "Insights into trader sentiment and market positioning."}
+      ]
+   },
+   {
+      "category": "Governance & Proposals",
+      "description": "Discussions and updates on governance, proposals, and policies.",
+      "tags": [
+        {"name": "Governance Proposals", "description": "New proposals for protocol or community governance."},
+        {"name": "Voting Results", "description": "Outcomes of governance votes and decisions."},
+        {"name": "Policy Changes", "description": "Announcements of changes to policies or rules."},
+        {"name": "Community Discussions", "description": "Debates and discussions within the community."},
+        {"name": "Token Governance", "description": "Updates on token governance mechanisms and voting outcomes."}
+      ]
+   },
+   {
+      "category": "Support & Education",
+      "description": "Resources and support for learning and troubleshooting.",
+      "tags": [
+        {"name": "Tutorials", "description": "Step-by-step guides and how-tos."},
+        {"name": "AMA Recaps", "description": "Summaries of Ask Me Anything sessions."},
+        {"name": "Bug Bounties", "description": "Opportunities to find and report bugs for rewards."},
+        {"name": "Help & Support", "description": "Assistance and support resources for users."},
+        {"name": "FAQ", "description": "Frequently asked questions and answers."},
+        {"name": "Developer Guides", "description": "Comprehensive guides for developers building on the platform."}
+      ]
+   },
+   {
+      "category": "Milestones & Achievements",
+      "description": "Celebration and recognition of major milestones and achievements.",
+      "tags": [
+        {"name": "Product Milestones", "description": "Major product releases and milestones reached."},
+        {"name": "Ecosystem Milestones", "description": "Significant achievements within the broader ecosystem."},
+        {"name": "Awards & Recognition", "description": "Awards and formal recognitions received."},
+        {"name": "Growth Metrics", "description": "Key metrics and statistics showing growth."},
+        {"name": "TVL Growth", "description": "Total value locked growth and DeFi protocol metrics."}
+      ]
+   },
+   {
+      "category": "Competitive Analysis",
+      "description": "Analysis and comparisons with competing platforms and protocols.",
+      "tags": [
+        {"name": "Market Positioning", "description": "Analysis of competitive positioning vs other platforms."},
+        {"name": "Performance Benchmarks", "description": "Layer 2 scaling performance metrics and benchmarks."},
+        {"name": "Technology Comparisons", "description": "Technical comparisons with other platforms and solutions."},
+        {"name": "Stablecoin Competition", "description": "Analysis of competitive dynamics between stablecoins."}
+      ]
+   },
+   {
+      "category": "Controversies & Criticisms",
+      "description": "Discussion of controversies, criticisms, and regulatory challenges.",
+      "tags": [
+        {"name": "Regulatory Challenges", "description": "News and analysis of regulatory scrutiny and challenges."},
+        {"name": "Community Debates", "description": "Community discussions about trust, stability, and controversies."},
+        {"name": "Security Concerns", "description": "Reports and discussions about security issues or concerns."},
+        {"name": "Misrepresentation Claims", "description": "Discussion of fraud and misrepresentation allegations."}
+      ]
+   },
+   {
+      "category": "AI & Emerging Technologies",
+      "description": "Content related to AI agents, user-owned AI, and the intersection of AI with crypto/Web3 technologies.",
+      "tags": [
+        {"name": "AI Agents", "description": "Discussions about AI agents and their applications in crypto/Web3."},
+        {"name": "User-Owned AI", "description": "Content about user-owned or decentralized AI models and platforms."},
+        {"name": "AI x Crypto", "description": "Exploration of the intersection between AI technologies and cryptocurrency/Web3."},
+        {"name": "AI Monetization", "description": "Discussion of how AI technologies can be monetized in the crypto ecosystem."},
+        {"name": "Decentralized AI", "description": "Content about decentralized AI models and infrastructure."}
+      ]
+   }
+]

@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/features/auth/lib/auth';
 import { 
-  findReferralCodeByUserId, 
-  addReferralCode 
-} from '@/lib/mockData/referralStore';
+  connectToReferralsDatabase,
+  findReferralCodeByUserId,
+  createReferralCode
+} from '@/models/Referrals';
 
 // Generate a random referral code
 function generateReferralCode(length: number = 8): string {
@@ -26,13 +27,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    const body = await request.json();
-    const { maxUses, expiresAt } = body;
+    // Connect to MongoDB
+    await connectToReferralsDatabase();
+    
+    await request.json(); // Consume the request body but don't use it
     
     console.log('Looking for existing code for user ID:', session.user.id);
     
     // Check if user already has a referral code
-    const existingCode = findReferralCodeByUserId(session.user.id);
+    const existingCode = await findReferralCodeByUserId(session.user.id);
     
     console.log('Existing code found:', existingCode);
     
@@ -41,36 +44,36 @@ export async function POST(request: Request) {
         id: existingCode.userId,
         userId: existingCode.userId,
         code: existingCode.code,
-        isActive: existingCode.isActive,
         usageCount: existingCode.usageCount,
-        maxUses: existingCode.maxUses,
         createdAt: existingCode.createdAt,
       });
     }
     
-    // Generate new referral code
-    const newCode = {
+    // Generate a new referral code
+    const newCode = generateReferralCode();
+    
+    console.log('Generated new code:', newCode);
+    
+    // Create referral code object
+    const referralCode = {
+      id: `refcode_${Date.now()}`,
       userId: session.user.id,
-      code: generateReferralCode(),
-      isActive: true,
+      code: newCode,
       usageCount: 0,
-      maxUses: maxUses || null,
       createdAt: new Date(),
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
     };
     
-    console.log('Adding new referral code:', newCode);
+    // Save to MongoDB
+    await createReferralCode(referralCode);
     
-    addReferralCode(newCode);
+    console.log('Saved referral code:', referralCode);
     
     return NextResponse.json({
-      id: newCode.userId,
-      userId: newCode.userId,
-      code: newCode.code,
-      isActive: newCode.isActive,
-      usageCount: newCode.usageCount,
-      maxUses: newCode.maxUses,
-      createdAt: newCode.createdAt,
+      id: referralCode.userId,
+      userId: referralCode.userId,
+      code: referralCode.code,
+      usageCount: referralCode.usageCount,
+      createdAt: referralCode.createdAt,
     });
   } catch (error) {
     console.error('Error generating referral code:', error);

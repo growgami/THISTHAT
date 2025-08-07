@@ -5,7 +5,6 @@ import {
   SunIcon, 
   MoonIcon, 
   ChartBarIcon,
-  RectangleStackIcon,
   UserIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
@@ -16,14 +15,14 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 
 interface NavbarProps {
   showRankings: boolean;
-  showThose: boolean;
+  /* showThose: boolean; */
   showAccount: boolean;
   onToggleRankings: () => void;
-  onToggleThose: () => void;
+  /* onToggleThose: () => void; */
   onToggleAccount: () => void;
 }
 
-export default function Navbar({ showRankings, showThose, showAccount, onToggleRankings, onToggleThose, onToggleAccount }: NavbarProps) {
+export default function Navbar({ showRankings,/* showThose,*/ showAccount, onToggleRankings,/* onToggleThose,*/ onToggleAccount }: NavbarProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -90,6 +89,7 @@ export default function Navbar({ showRankings, showThose, showAccount, onToggleR
         >
           Rankings
         </span>
+        {/*
         <span 
           className={`cursor-pointer transition-colors ${
             showThose 
@@ -100,6 +100,7 @@ export default function Navbar({ showRankings, showThose, showAccount, onToggleR
         >
           Collection
         </span>
+        */}
         
         {/* Accounts Section with Dropdown */}
         <span 
@@ -133,9 +134,9 @@ export default function Navbar({ showRankings, showThose, showAccount, onToggleR
             </div>
           )}
         </span>
-        
+        {/*
         <span className="hover:text-primary-hover cursor-pointer transition-colors">Settings</span>
-        
+        */}
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
@@ -168,7 +169,7 @@ export default function Navbar({ showRankings, showThose, showAccount, onToggleR
               <span className="text-xs mt-1 font-medium">Rankings</span>
             </button>
 
-            {/* Collection */}
+            {/* Collection 
             <button
               onClick={onToggleThose}
               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 min-w-[60px] ${
@@ -181,6 +182,7 @@ export default function Navbar({ showRankings, showThose, showAccount, onToggleR
               <RectangleStackIcon className="w-6 h-6" />
               <span className="text-xs mt-1 font-medium">Collection</span>
             </button>
+            */}
 
             {/* Account - Show auth state on mobile too */}
             <button

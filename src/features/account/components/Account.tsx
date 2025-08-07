@@ -95,7 +95,7 @@ export default function Account() {
 
   if (authLoading) {
     return (
-      <div className="flex flex-col items-center w-full px-4">
+      <div className="flex flex-col items-center w-full px-4 pt-16 md:pt-22">
         <h1 className="text-6xl md:text-8xl font-light text-primary mb-2 tracking-wide font-body drop-shadow-2xl text-center">
           Account
         </h1>
@@ -109,7 +109,7 @@ export default function Account() {
   // If user is not authenticated, show sign-in prompt
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex flex-col items-center w-full px-4">
+      <div className="flex flex-col items-center w-full px-4 pt-16 md:pt-22">
         <h1 className="text-6xl md:text-8xl font-light text-primary mb-6 tracking-wide font-body drop-shadow-2xl text-center">
           Account
         </h1>
@@ -126,7 +126,7 @@ export default function Account() {
 
   if (accountLoading) {
     return (
-      <div className="flex flex-col items-center w-full px-4">
+      <div className="flex flex-col items-center w-full px-4 pt-16 md:pt-22">
         <h1 className="text-6xl md:text-8xl font-light text-primary mb-2 tracking-wide font-body drop-shadow-2xl text-center">
           Account
         </h1>
@@ -139,7 +139,7 @@ export default function Account() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center w-full px-4">
+      <div className="flex flex-col items-center w-full px-4 pt-16 md:pt-22">
         <h1 className="text-6xl md:text-8xl font-light text-primary mb-2 tracking-wide font-body drop-shadow-2xl text-center">
           Account
         </h1>
@@ -152,13 +152,15 @@ export default function Account() {
 
   return (
     <div className="flex flex-col items-center w-full px-4">
-      {/* Centered Title */}
-      <h1 className="text-6xl md:text-8xl font-light text-primary mb-2 tracking-wide font-body drop-shadow-2xl text-center">
-        Account
-      </h1>
-      <p className="text-tertiary mt-2 font-caption mb-8">
-        Manage your profile and preferences
-      </p>
+      {/* Header Section (in flow, stable spacing) */}
+      <div className="w-full flex flex-col items-center pt-16 md:pt-22 pb-6">
+        <h1 className="text-6xl md:text-8xl font-light text-primary tracking-wide font-body drop-shadow-2xl text-center">
+          Account
+        </h1>
+        <p className="text-tertiary mt-2 font-caption">
+          Manage your profile and preferences
+        </p>
+      </div>
 
       {/* Tab Navigation */}
       <div className="w-full max-w-6xl mb-8">

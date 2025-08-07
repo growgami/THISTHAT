@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/features/auth/lib/auth';
-import { getReferralHistoryByUserId } from '@/lib/mockData/referralStore';
+import { connectToReferralsDatabase, getReferralHistoryByUserId } from '@/models/Referrals';
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
+    
+    // Connect to MongoDB
+    await connectToReferralsDatabase();
     
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
     // Get referrals for the current user
-    const userReferrals = getReferralHistoryByUserId(session.user.id);
+    const userReferrals = await getReferralHistoryByUserId(session.user.id);
     
     // Format the referrals for the response
     const formattedReferrals = userReferrals.map(ref => ({
@@ -20,7 +23,8 @@ export async function GET() {
       // Note: In a real implementation, you would fetch user details from the database
       referredUser: { id: ref.referredId, name: 'User', email: 'user@example.com' },
       referralCode: ref.referralCode,
-      status: ref.status,
+      // Since referrals are now always active, all referrals are considered completed
+      status: 'completed',
       creditsAwarded: ref.rewardCredits,
       createdAt: ref.createdAt,
       completedAt: ref.completedAt,

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TweetCards from '@/features/tweets/containers/Tweets';
 import { useTweets } from '@/features/tweets/hooks/useTweets';
-import Navbar from '../layout/Navbar';
+import Navbar from '../../layout/Navbar';
 import LoadingScreen from '@/features/loader/components/LoadingScreen';
 import Ranking from '@/features/ranking/components/Rankings';
 import Those from '@/features/collection/components/Collection';
@@ -13,7 +13,7 @@ import { pageVariants, transitions } from '@/components/animations/animations';
 import { Spotlight } from '@/features/tweets/animations/Spotlight';
 
 export default function PageContent() {
-  const { currentTweets, isLoading, error, handleNext } = useTweets();
+  const { currentTweets, isLoading, error, handleNext, isPreferenceExhausted, startExplore, isExploring } = useTweets();
   const [showRankings, setShowRankings] = useState(false);
   const [showThose, setShowThose] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
@@ -35,12 +35,14 @@ export default function PageContent() {
     setShowAccount(false); // Hide Account when showing rankings
   };
 
+  /*
   // Handle those toggle
   const handleToggleThose = () => {
     setShowThose(!showThose);
     setShowRankings(false); // Hide rankings when showing those
     setShowAccount(false); // Hide Account when showing those
   };
+  */
 
   // Handle account toggle
   const handleToggleAccount = () => {
@@ -71,19 +73,19 @@ export default function PageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-18 relative overflow-hidden">
-      {/* Spotlight Background Overlay */}
-      <Spotlight />
+    <div className={`min-h-screen bg-background p-18 relative ${showAccount ? 'overflow-visible' : 'overflow-hidden'}`}>
+      {/* Spotlight Background Overlay (hidden on Account) */}
+      {!showAccount && <Spotlight />}
       
       {/* Outer border container */}
-      <div className="h-[calc(100vh-9rem)] rounded-sm relative z-10">
+      <div className={`${showAccount ? 'min-h-[calc(100vh-9rem)]' : 'h-[calc(100vh-9rem)]'} rounded-sm relative z-10`}>
         {/* Navigation */}
         <Navbar 
           showRankings={showRankings} 
-          showThose={showThose}
+          /* showThose={showThose} */
           showAccount={showAccount}
-          onToggleThose={handleToggleThose}
           onToggleRankings={handleToggleRankings}
+          /* onToggleThose={handleToggleThose} */
           onToggleAccount={handleToggleAccount}
         />
 
@@ -122,7 +124,7 @@ export default function PageContent() {
                 animate="animate"
                 exit="exit"
                 transition={transitions.pageTransition}
-                className="h-full flex flex-col items-center justify-center px-4"
+                className="min-h-full flex flex-col items-center px-4"
               >
                 <Account />
               </motion.div>
@@ -141,6 +143,19 @@ export default function PageContent() {
                   onLike={handleLike}
                   onNext={handleNext}
                 />
+                <div className="mt-6 flex flex-col items-center justify-center">
+                  {isPreferenceExhausted && !isExploring && (
+                    <button
+                      onClick={startExplore}
+                      className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition-colors"
+                    >
+                      Continue choosing?
+                    </button>
+                  )}
+                  {isExploring && (
+                    <p className="text-sm text-tertiary mt-2">Exploring all tweets</p>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

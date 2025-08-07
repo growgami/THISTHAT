@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next"
 import { NextAuthOptions } from "next-auth"
 import TwitterProvider from "next-auth/providers/twitter"
-import "../../../types/auth/auth"
+import "@/types/auth/auth"
 
 /**
  * Takes a token, and returns a new token with updated
@@ -11,15 +11,15 @@ import "../../../types/auth/auth"
 // Using any here because the JWT callback expects a specific token structure
 // TODO: Improve typing when we have a better understanding of the exact structure needed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function refreshAccessToken(token: { refreshToken?: string }): Promise<any> {
+async function refreshAccessToken(token: { refreshToken?: string, accessTokenExpires?: number }): Promise<any> {
   try {
     // Only attempt refresh if we have a refresh token
     if (!token.refreshToken) {
       throw new Error('No refresh token available')
     }
 
-    // Log the refresh token for debugging (remove in production)
-    console.log('Attempting to refresh token with refresh_token:', token.refreshToken);
+    // Log the refresh attempt for debugging
+    console.log('Attempting to refresh token. Token expires at:', new Date(token.accessTokenExpires || 0));
 
     // For Twitter OAuth 2.0, we need to include the client_id in the body
     // and use the correct authorization header format
@@ -44,16 +44,29 @@ async function refreshAccessToken(token: { refreshToken?: string }): Promise<any
     console.log('Refresh token response:', refreshedTokens);
 
     if (!response.ok) {
-      // If the refresh token is invalid, we should trigger a re-authentication
-      if (response.status === 400 && refreshedTokens.error === 'invalid_request') {
-        return {
-          ...token,
-          error: 'RefreshTokenInvalid',
+      console.error('Failed to refresh token:', response.status, refreshedTokens);
+      // If the refresh token is invalid or expired, we should logout the user
+      if (response.status === 400) {
+        // Common invalid token errors
+        if (refreshedTokens.error === 'invalid_request' || 
+            refreshedTokens.error === 'invalid_grant' || 
+            refreshedTokens.error === 'expired_token') {
+          console.log('Refresh token is invalid, marking as invalid');
+          return {
+            ...token,
+            error: 'RefreshTokenInvalid',
+          }
         }
       }
-      throw refreshedTokens
+      // For other errors, still throw but mark as refresh error
+      return {
+        ...token,
+        error: 'RefreshAccessTokenError',
+      }
     }
 
+    // Successfully refreshed tokens
+    console.log('Successfully refreshed tokens, new expiration:', new Date(Date.now() + (refreshedTokens.expires_in * 1000)));
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
@@ -62,6 +75,8 @@ async function refreshAccessToken(token: { refreshToken?: string }): Promise<any
     }
   } catch (error) {
     console.error('Error refreshing access token:', error)
+    // If we get a network error or other unexpected error, still mark as refresh error
+    // but don't automatically logout the user to maintain persistent session
     return {
       ...token,
       error: 'RefreshAccessTokenError',
@@ -83,7 +98,8 @@ export const authOptions: NextAuthOptions = {
       if (account && user) {
         token.accessToken = account.access_token
         token.refreshToken = account.refresh_token
-        token.accessTokenExpires = account.expires_at ? account.expires_at * 1000 : Date.now() + 7200000 // Default to 2 hours
+        // Extend default expiration to 30 days (but will be refreshed proactively)
+        token.accessTokenExpires = account.expires_at ? account.expires_at * 1000 : Date.now() + 30 * 24 * 60 * 60 * 1000
         // Store user information in the token
         token.user = {
           id: user.id,
@@ -95,20 +111,26 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.accessTokenExpires as number)) {
+      // Add 5 minute buffer to refresh tokens before they actually expire
+      if (Date.now() < ((token.accessTokenExpires as number) - 5 * 60 * 1000)) {
         return token
       }
 
       // Access token has expired, try to update it
       const refreshedToken = await refreshAccessToken(token)
       
-      // If the refresh token is invalid, we need to trigger re-authentication
+      // If the refresh token is invalid and cannot be refreshed anymore, mark it as such
       if ('error' in refreshedToken && refreshedToken.error === 'RefreshTokenInvalid') {
         // Return a token with an error that will be handled by the client
         return {
           ...token,
           error: 'RefreshTokenInvalid',
         }
+      }
+      
+      // If there was a general refresh error, keep the error for client handling
+      if ('error' in refreshedToken && refreshedToken.error === 'RefreshAccessTokenError') {
+        return refreshedToken;
       }
       
       return refreshedToken
@@ -130,6 +152,13 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
+    // Extend session duration to 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  // Add jwt configuration for automatic refresh
+  jwt: {
+    // Set secret for signing JWT
+    secret: process.env.NEXTAUTH_SECRET,
   },
   secret: process.env.NEXTAUTH_SECRET,
 }

@@ -7,9 +7,10 @@ import { ShareIcon, ClipboardIcon, CheckIcon } from '@heroicons/react/24/outline
 interface ReferralCardProps {
   onGenerateCode?: () => void;
   onCopyCode?: () => void;
+  refreshOnMount?: boolean;
 }
 
-export default function ReferralCard({ onGenerateCode, onCopyCode }: ReferralCardProps) {
+export default function ReferralCard({ onGenerateCode, onCopyCode, refreshOnMount = true }: ReferralCardProps) {
   const {
     referralCode,
     referralStats,
@@ -25,8 +26,10 @@ export default function ReferralCard({ onGenerateCode, onCopyCode }: ReferralCar
   const [referralLink, setReferralLink] = useState('');
 
   useEffect(() => {
-    fetchReferralCode();
-  }, [fetchReferralCode]);
+    if (refreshOnMount) {
+      fetchReferralCode();
+    }
+  }, [fetchReferralCode, refreshOnMount]);
 
   const handleGenerateCode = async () => {
     try {
